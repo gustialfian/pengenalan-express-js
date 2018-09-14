@@ -1,13 +1,15 @@
-// npm i b0dy parser
-
+// merujuk express, body-parser
 const express = require('express');
 const bodyParser = require('body-parser');
 
+// instansiasi obejct express dan di simpan pada konstanta app
 const app = express();
 
-// middleware
+// gunakan body parser sebgai middleware
 app.use(bodyParser.json());
 
+// untuk sementara kita anggap variable db ini sebagai sumber data kita
+// contoh data yang kita gunakan adalah job pada karakter game
 let db = [
     {
         id: 1,
@@ -27,12 +29,15 @@ let db = [
     },
 ];
 
+// contoh routing pada express
 app.get('/', (request, response) => response.send('Hello World'));
 
+// memberikan List job
 app.get('/jobs', (request, response) => {
     return response.json(db);
 });
 
+// memberikan job spesifik sesuai dengan nama yang ada pada url
 app.get('/jobs/:name', (request, response) => {
     const result = db.filter(val => {
         return val.name.toLocaleLowerCase() === request.params.name.toLocaleLowerCase();
@@ -40,6 +45,7 @@ app.get('/jobs/:name', (request, response) => {
     return response.json(result);
 });
 
+// memasukan job baru
 app.post('/jobs', (request, response) => {
     const newJob = {
         id: db.length + 1,
@@ -55,6 +61,7 @@ app.post('/jobs', (request, response) => {
     return response.json(newJob);
 });
 
+// mengubah job yang ada
 app.put('/jobs/:name', (request, response) => {
     const theJob = db.filter(val => {
         return val.name.toLocaleLowerCase() === request.params.name.toLocaleLowerCase();
@@ -78,6 +85,7 @@ app.put('/jobs/:name', (request, response) => {
     return response.json(newJob);
 });
 
+// menghapus job yang ada
 app.delete('/jobs/:name', (request, response) => {
     db = db.filter(val => {
         return val.name.toLocaleLowerCase() !== request.params.name.toLocaleLowerCase();
@@ -86,4 +94,5 @@ app.delete('/jobs/:name', (request, response) => {
     return response.json(db);
 });
 
+// mendengarkan event yang terjadi pada localhost dengan port 3000
 app.listen(3000, () => console.log('listenig on localhos:3000'));
