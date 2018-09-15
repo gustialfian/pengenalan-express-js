@@ -18,7 +18,8 @@ sequelize
     .authenticate()
     .then(function () {
         console.log('Koneksi ke db terlah berhasil.');
-    }, function (err) {
+    })
+    .catch(function (err) {
         console.log('Tidak dapat melakukan koneksi ke db: ', err);
     });
 
@@ -56,11 +57,12 @@ sequelize
             },
         ]);
 
-    }, function (err) {
-        console.log('Error muncul saat membuat table: ', err);
     })
     .then(function (jobs) {
         console.log('data berhasil di masukan');
+    })
+    .catch(function (err) {
+        console.log('Error muncul saat membuat table: ', err);
     });
 
 
@@ -83,6 +85,9 @@ app.get('/', (request, response) => response.send('Hello World'));
 app.get('/jobs', (request, response) => {
     Job.findAll().then(function (jobs) {
         return response.json(jobs);
+    })
+    .catch(function (err) {
+        console.log('Something happend');
     });
 });
 
@@ -99,6 +104,9 @@ app.get('/jobs/:name', (request, response) => {
         }
 
         return response.json(job);
+    })
+    .catch(function (err) {
+        console.log('Something happend');
     });
 });
 
@@ -110,8 +118,12 @@ app.post('/jobs', (request, response) => {
         defence: request.body.defence,
         agility: request.body.agility,
         magic: request.body.magic,
-    }).then(function (job) {
+    })
+    .then(function (job) {
         return response.json(job);
+    })
+    .catch(function (err) {
+        console.log('Something happend');
     });
 });
 
@@ -137,6 +149,9 @@ app.put('/jobs/:name', (request, response) => {
     })
     .then(function (job) {
         return response.json(job);
+    })
+    .catch(function (err) {
+        console.log('Something happend');
     });
 });
 
@@ -156,6 +171,9 @@ app.delete('/jobs/:name', (request, response) => {
     })
     .then(function (job) {
         return response.json('Data has been deleted');
+    })
+    .catch(function (err) {
+        console.log('Something happend');
     });
 });
 
