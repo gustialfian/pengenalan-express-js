@@ -1,5 +1,6 @@
 // merujuk express, body-parser
 const express = require('express');
+const { check, validationResult } = require('express-validator/check');
 const bodyParser = require('body-parser');
 const Sequelize = require('sequelize');
 
@@ -72,12 +73,6 @@ const app = express();
 // gunakan body parser sebgai middleware
 app.use(bodyParser.json());
 
-/**
- * baris kode untuk db dummy kita ganti dengan sequlize
- * 
- * 
- */
-
 // contoh routing pada express
 app.get('/', (request, response) => response.send('Hello World'));
 
@@ -111,7 +106,20 @@ app.get('/jobs/:name', (request, response) => {
 });
 
 // memasukan job baru
-app.post('/jobs', (request, response) => {
+app.post('/jobs', [
+    // method check digunakan untuk melakukan pengecekan value yang ada 
+    // di body request dengan chain method selanjutnya
+    check('name', 'nilai harus string').isString(),
+    check('attack', 'nilai harus angka').isNumeric(),
+    check('defence', 'nilai harus angka').isNumeric(),
+    check('agility', 'nilai harus angka').isNumeric(),
+    check('magic', 'nilai harus angka').isNumeric(),
+], (request, response) => {
+    const errors = validationResult(request);
+    if (!errors.isEmpty()) {
+        return response.status(422).json({ errors: errors.array() });
+    }
+
     Job.create({
         name: request.body.name,
         attack: request.body.attack,
@@ -128,7 +136,13 @@ app.post('/jobs', (request, response) => {
 });
 
 // mengubah job yang ada
-app.put('/jobs/:name', (request, response) => {
+app.put('/jobs/:name', [
+    check('name', 'nilai harus string').isString(),
+    check('attack', 'nilai harus angka').isNumeric(),
+    check('defence', 'nilai harus angka').isNumeric(),
+    check('agility', 'nilai harus angka').isNumeric(),
+    check('magic', 'nilai harus angka').isNumeric(),
+], (request, response) => {
     Job.findOne({
         where: {
             name: request.params.name,
